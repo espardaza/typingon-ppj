@@ -1,0 +1,48 @@
+// TABLE 1: USER (User Management & Security)
+model User {
+  id            String    @id @default(uuid()) // Automatically generate a unique, non-guessable ID
+  username      String    @unique              // Must be unique across all users
+  email         String    @unique              // Must be unique across all users
+  password      String                         // Stores the HASHED password
+
+  // Fields for Email OTP authentication flow
+  isVerified    Boolean   @default(false)      // Default to false for new registrations
+  otp           String?                        // OTP code (Nullable after verification)
+  otpExpiresAt  DateTime?                      // OTP expiration time (typically 5-15 minutes)
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relationships: 1 User can have multiple Records and multiple Snippets
+  records       Record[]
+  snippets      Snippet[]  // Connection to the Snippet table
+}
+
+// TABLE 2: RECORD (Typing History)
+model Record {
+  id        String   @id @default(uuid())
+  wpm       Int      // Words Per Minute (typing speed)
+  errors    Int      // Total number of errors
+  words     Int?     // Total words typed
+  time      Int?     // Duration in seconds
+
+  // Foreign key linking to the User table
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+}
+
+// TABLE 3: SNIPPET (Typing Practice Library)
+model Snippet {
+  id          String   @id @default(uuid())
+  content     String   // The actual text content for practice
+  defaultTime Int      @default(60) // Default duration in seconds if not specified
+  tags        String[] // List of categories (e.g., ["JS", "React"])
+
+  // Foreign key linking to the User table (The creator of this snippet)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+}
