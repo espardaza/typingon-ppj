@@ -148,7 +148,21 @@ export default function TypingPage() {
       durationSeconds?: number,
     ) => {
       const typedText = finalInput || userInput;
-      const wordsCount = typedText.split(" ").filter(Boolean).length;
+
+     
+      const typedWords = typedText.split(" ").filter(Boolean);
+      const targetWords = snippet?.content.split(" ").filter(Boolean) || [];
+
+      let correctWordsCount = 0;
+      for (let i = 0; i < typedWords.length; i++) {
+        if (typedWords[i] === targetWords[i]) {
+          correctWordsCount++;
+        }
+      }
+
+      const wordsCount = correctWordsCount;
+      // ----------------------------------------------------------------
+
       const timeSpent = durationSeconds || 0;
 
       // GUEST -> SAVE IN LOCAL STORAGE
@@ -188,7 +202,7 @@ export default function TypingPage() {
         console.error("Network error:", err);
       }
     },
-    [username, userInput],
+    [username, userInput, snippet], 
   );
 
   const handleFinish = useCallback(
@@ -255,22 +269,26 @@ export default function TypingPage() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isFinished, loadNextSnippet, showSignUpModal]);
 
+
   useEffect(() => {
     let timer: NodeJS.Timeout;
-    if (isStarted && timeLeft > 0 && !isFinished) {
+    if (isStarted && !isFinished) {
       timer = setInterval(() => {
         setTimeLeft((prev) => {
-          if (prev <= 1) {
-            clearInterval(timer);
-            handleFinish();
-            return 0;
-          }
+          if (prev <= 1) return 0;
           return prev - 1;
         });
       }, 1000);
     }
     return () => clearInterval(timer);
-  }, [isStarted, isFinished, timeLeft, handleFinish]);
+  }, [isStarted, isFinished]);
+
+ 
+  useEffect(() => {
+    if (isStarted && timeLeft === 0 && !isFinished) {
+      handleFinish();
+    }
+  }, [timeLeft, isStarted, isFinished, handleFinish]);
 
   const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
