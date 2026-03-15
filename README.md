@@ -4,7 +4,9 @@
 
 **TyPingOn** is a modern, high-performance web application built to help users elevate their typing speed and accuracy. Create your own typing snippets, practice daily, and track your progress in real-time.
 
-**Try the live app here:** [https://typingon.vercel.app/](https://typingon.vercel.app/)
+**Live Preview:** [https://typingon.vercel.app/](https://typingon.vercel.app/) 
+
+(Seamlessly rendered on the client-side for an instant typing experience.)
 
 ## Tech Stack
 
@@ -54,6 +56,9 @@ The backend API will run on `http://localhost:3001`.
 <p align="center">
   <img src="https://github.com/user-attachments/assets/dca80409-9aae-4aad-8ba3-62d139ffa0cd" alt="demo app"/>
 
+</p>
+<p align="center">
+<img src="https://drive.google.com/uc?export=view&id=1ShgtkiIfCZLffALtKwbQXmolA-H2etMl" alt="Powered by Espa" width=200px />
 </p>
 
 ---
